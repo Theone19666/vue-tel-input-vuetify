@@ -656,6 +656,7 @@ export default {
       this.$emit('onInput', this.phoneObject); // Deprecated
       // Keep the current cursor position just in case the input reformatted
       // and it gets moved to the last character.
+
       if (e && e.target) {
         this.cursorPosition = e.target.selectionStart;
       }
