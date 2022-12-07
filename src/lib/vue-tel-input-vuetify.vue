@@ -1,13 +1,12 @@
 <template>
   <div :class="['vue-tel-input-vuetify', wrapperClasses]">
     <div class="country-code">
-      <v-select
+      <v-combobox
         ref="countryInput"
         v-model="countryCode"
         :append-icon="appendIcon"
         :class="selectClasses"
         :label="selectLabel"
-        @change="onChangeCountryCode"
         :items="sortedCountries"
         :disabled="disabled"
         :outlined="outlined"
@@ -23,21 +22,33 @@
         :dense="dense"
         :menu-props="menuProps"
         :height="inputHeight"
+        :filter="filter"
         item-text="name"
         item-value="iso2"
         return-object
+        @change="onChangeCountryCode"
+        @focus="isFocused = true"
+        @blur="isFocused = false"
       >
-        <template v-slot:selection>
-          <div :class="activeCountry.iso2.toLowerCase()" class="vti__flag" />
+        <template #selection>
+          <div
+            :class="[
+              activeCountry?.iso2?.toLowerCase(),
+              { 'd-none': isFocused },
+            ]"
+            class="vti__flag"
+          />
         </template>
-        <template v-slot:item="data">
-          <span :class="data.item.iso2.toLowerCase()" class="vti__flag" />
+        <template #item="data">
+          <span :class="data.item?.iso2?.toLowerCase()" class="vti__flag" />
           <span>{{ data.item.name }} {{ `+${data.item.dialCode}` }}</span>
         </template>
-      </v-select>
+      </v-combobox>
     </div>
     <v-text-field
+      :id="inputId"
       ref="input"
+      v-model="phone"
       type="tel"
       :class="textFieldClasses"
       :messages="messages"
@@ -73,12 +84,10 @@
       :disabled="disabled"
       :placeholder="placeholder"
       :persistent-placeholder="persistentPlaceholder"
-      v-model="phone"
       :autofocus="autofocus"
       :name="name"
       :required="required"
       :autocomplete="autocomplete"
-      :id="inputId"
       :maxlength="maxLen"
       :tabindex="
         inputOptions && inputOptions.tabindex ? inputOptions.tabindex : 0
@@ -408,6 +417,7 @@ export default {
       typeToFindTimer: null,
       cursorPosition: 0,
       countryCode: null,
+      isFocused: false,
     };
   },
   computed: {
@@ -429,10 +439,11 @@ export default {
       if (this.onlyCountries.length) {
         return this.getCountries(this.onlyCountries);
       }
+
       if (this.ignoredCountries.length) {
         return this.allCountries.filter(
-          ({ iso2 }) => !this.ignoredCountries.includes(iso2.toUpperCase())
-            && !this.ignoredCountries.includes(iso2.toLowerCase()),
+          ({ iso2 }) => !this.ignoredCountries?.includes(iso2?.toUpperCase())
+            && !this.ignoredCountries?.includes(iso2?.toLowerCase()),
         );
       }
       return this.allCountries;
@@ -779,6 +790,18 @@ export default {
     },
     onChangeCountryCode() {
       this.choose(this.countryCode, true);
+      this.$refs.countryInput.blur();
+    },
+    filter(item, queryText) {
+      if (
+        item.dialCode.includes(queryText.replace('+', ''))
+        || item.name?.toLowerCase()?.includes(queryText?.toLowerCase())
+        || item.iso2?.toLowerCase()?.includes(queryText?.toLowerCase())
+      ) {
+        return true;
+      }
+
+      return false;
     },
   },
 };
