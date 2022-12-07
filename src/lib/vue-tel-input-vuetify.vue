@@ -27,8 +27,8 @@
         item-value="iso2"
         return-object
         @change="onChangeCountryCode"
-        @focus="isFocused = true"
-        @blur="isFocused = false"
+        @focus="toggleIsFocused(true)"
+        @blur="toggleIsFocused(false)"
       >
         <template #selection>
           <div
@@ -803,6 +803,9 @@ export default {
       }
 
       return false;
+    },
+    toggleIsFocused(isFocused) {
+      this.isFocused = isFocused;
     },
   },
 };
