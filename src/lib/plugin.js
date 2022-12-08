@@ -14,7 +14,7 @@ export function install(Vue, customOptions = {}) {
     ...customOptions,
   };
   Vue.use(vuetifyFramework);
-  Vue.component('vue-tel-input-vuetify', VueTelInputVuetify);
+  Vue.component('vue-tel-input-vuetify-combobox', VueTelInputVuetify);
 }
 
 export { VueTelInputVuetify };

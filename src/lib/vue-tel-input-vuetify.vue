@@ -33,14 +33,14 @@
         <template #selection>
           <div
             :class="[
-              activeCountry.iso2.toLowerCase(),
+              activeCountry.iso2 ? activeCountry.iso2.toLowerCase() : '',
               { 'd-none': isFocused },
             ]"
             class="vti__flag"
           />
         </template>
         <template #item="data">
-          <span :class="data.item.iso2.toLowerCase()" class="vti__flag" />
+          <span :class="data.item.iso2 ? data.item.iso2.toLowerCase() : ''" class="vti__flag" />
           <span>{{ data.item.name }} {{ `+${data.item.dialCode}` }}</span>
         </template>
       </v-combobox>
