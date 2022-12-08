@@ -33,14 +33,14 @@
         <template #selection>
           <div
             :class="[
-              activeCountry?.iso2?.toLowerCase(),
+              activeCountry.iso2.toLowerCase(),
               { 'd-none': isFocused },
             ]"
             class="vti__flag"
           />
         </template>
         <template #item="data">
-          <span :class="data.item?.iso2?.toLowerCase()" class="vti__flag" />
+          <span :class="data.item.iso2.toLowerCase()" class="vti__flag" />
           <span>{{ data.item.name }} {{ `+${data.item.dialCode}` }}</span>
         </template>
       </v-combobox>
@@ -442,8 +442,8 @@ export default {
 
       if (this.ignoredCountries.length) {
         return this.allCountries.filter(
-          ({ iso2 }) => !this.ignoredCountries?.includes(iso2?.toUpperCase())
-            && !this.ignoredCountries?.includes(iso2?.toLowerCase()),
+          ({ iso2 }) => !this.ignoredCountries.includes(iso2.toUpperCase())
+            && !this.ignoredCountries.includes(iso2.toLowerCase()),
         );
       }
       return this.allCountries;
@@ -793,11 +793,11 @@ export default {
       this.choose(this.countryCode, true);
       this.$refs.countryInput.blur();
     },
-    filter(item, queryText) {
+    filter(item, queryText = '') {
       if (
         item.dialCode.includes(queryText.replace('+', ''))
-        || item.name?.toLowerCase()?.includes(queryText?.toLowerCase())
-        || item.iso2?.toLowerCase()?.includes(queryText?.toLowerCase())
+        || item.name.toLowerCase().includes(queryText.toLowerCase())
+        || item.iso2.toLowerCase().includes(queryText.toLowerCase())
       ) {
         return true;
       }
